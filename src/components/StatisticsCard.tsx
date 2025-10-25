@@ -17,7 +17,6 @@ export function StatisticsCard({
   stats,
   currentValue,
   unit = 'Pa',
-  color = '#6b7280',
 }: StatisticsCardProps) {
   // 计算变化趋势
   const trend = currentValue !== undefined 

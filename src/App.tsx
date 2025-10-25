@@ -4,7 +4,7 @@ import { StatisticsCard } from '@/components/StatisticsCard';
 import { TimeRangeSelector } from '@/components/TimeRangeSelector';
 import { pressureApi } from '@/services/api';
 import type { PressureData, Statistics } from '@/types';
-import { Activity, TrendingUp, TrendingDown, Gauge } from 'lucide-react';
+import { Activity, Gauge } from 'lucide-react';
 
 function App() {
   const [timeRange, setTimeRange] = useState<number>(60);
