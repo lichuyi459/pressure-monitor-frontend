@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { SensorStatistics } from '@/types';
-import { ArrowUp, ArrowDown, Activity } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
 
 interface StatisticsCardProps {
   title: string;
@@ -17,66 +17,107 @@ export function StatisticsCard({
   stats,
   currentValue,
   unit = 'Pa',
-  color = '#3b82f6',
+  color = '#6b7280',
 }: StatisticsCardProps) {
+  // 计算变化趋势
+  const trend = currentValue !== undefined 
+    ? ((currentValue - stats.avg) / Math.abs(stats.avg) * 100)
+    : 0;
+
   return (
-    <Card className="overflow-hidden">
+    <Card className="border-gray-200 shadow-sm">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{title}</CardTitle>
-        <CardDescription className="text-xs">{description}</CardDescription>
+        <CardTitle className="text-base font-semibold text-gray-900">{title}</CardTitle>
+        <CardDescription className="text-xs text-gray-500">{description}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-5">
-          {/* 当前值 */}
-          {currentValue !== undefined && (
-            <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50 border border-border/50">
-              <div className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-muted-foreground" style={{ color }} />
-                <span className="text-sm font-medium text-muted-foreground">当前值</span>
+      <CardContent className="space-y-4">
+        {/* 当前值显示 */}
+        {currentValue !== undefined && (
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-gray-600">当前读数</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900">
+                    {currentValue.toFixed(2)}
+                  </span>
+                  <span className="text-sm text-gray-500">{unit}</span>
+                </div>
               </div>
-              <span className="text-3xl font-bold tracking-tight" style={{ color }}>
-                {currentValue.toFixed(2)} <span className="text-base font-normal text-muted-foreground">{unit}</span>
-              </span>
-            </div>
-          )}
-
-          {/* 统计数据 */}
-          <div className="grid grid-cols-3 gap-4">
-            {/* 最大值 */}
-            <div className="flex flex-col items-center p-4 rounded-lg border border-border/50 bg-background transition-colors hover:bg-muted/30">
-              <div className="flex items-center gap-1 text-green-600 mb-2">
-                <ArrowUp className="h-4 w-4" />
-                <span className="text-xs font-medium">最大</span>
+              
+              {/* 趋势指示器 */}
+              <div className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
+                trend > 0 
+                  ? 'bg-green-100 text-green-700' 
+                  : trend < 0 
+                  ? 'bg-red-100 text-red-700'
+                  : 'bg-gray-100 text-gray-700'
+              }`}>
+                {trend > 0 ? (
+                  <>
+                    <TrendingUp className="h-3 w-3" />
+                    <span>+{Math.abs(trend).toFixed(1)}%</span>
+                  </>
+                ) : trend < 0 ? (
+                  <>
+                    <TrendingDown className="h-3 w-3" />
+                    <span>-{Math.abs(trend).toFixed(1)}%</span>
+                  </>
+                ) : (
+                  <>
+                    <Activity className="h-3 w-3" />
+                    <span>0.0%</span>
+                  </>
+                )}
               </div>
-              <span className="text-xl font-bold tracking-tight">
-                {stats.max.toFixed(2)}
-              </span>
-              <span className="text-xs text-muted-foreground mt-1">{unit}</span>
-            </div>
-
-            {/* 最小值 */}
-            <div className="flex flex-col items-center p-4 rounded-lg border border-border/50 bg-background transition-colors hover:bg-muted/30">
-              <div className="flex items-center gap-1 text-red-600 mb-2">
-                <ArrowDown className="h-4 w-4" />
-                <span className="text-xs font-medium">最小</span>
-              </div>
-              <span className="text-xl font-bold tracking-tight">
-                {stats.min.toFixed(2)}
-              </span>
-              <span className="text-xs text-muted-foreground mt-1">{unit}</span>
-            </div>
-
-            {/* 平均值 */}
-            <div className="flex flex-col items-center p-4 rounded-lg border border-border/50 bg-background transition-colors hover:bg-muted/30">
-              <div className="flex items-center gap-1 text-blue-600 mb-2">
-                <Activity className="h-4 w-4" />
-                <span className="text-xs font-medium">平均</span>
-              </div>
-              <span className="text-xl font-bold tracking-tight">
-                {stats.avg.toFixed(2)}
-              </span>
-              <span className="text-xs text-muted-foreground mt-1">{unit}</span>
             </div>
           </div>
+        )}
+
+        {/* 统计数据网格 */}
+        <div className="grid grid-cols-3 gap-4">
+          {/* 最大值 */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5">
+              <div className="h-2 w-2 rounded-full bg-green-500"></div>
+              <span className="text-xs font-medium text-gray-600">最大值</span>
+            </div>
+            <div>
+              <p className="text-xl font-bold text-gray-900">
+                {stats.max.toFixed(0)}
+              </p>
+              <p className="text-xs text-gray-500">{unit}</p>
+            </div>
+          </div>
+
+          {/* 平均值 */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5">
+              <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+              <span className="text-xs font-medium text-gray-600">平均值</span>
+            </div>
+            <div>
+              <p className="text-xl font-bold text-gray-900">
+                {stats.avg.toFixed(0)}
+              </p>
+              <p className="text-xs text-gray-500">{unit}</p>
+            </div>
+          </div>
+
+          {/* 最小值 */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5">
+              <div className="h-2 w-2 rounded-full bg-red-500"></div>
+              <span className="text-xs font-medium text-gray-600">最小值</span>
+            </div>
+            <div>
+              <p className="text-xl font-bold text-gray-900">
+                {stats.min.toFixed(0)}
+              </p>
+              <p className="text-xs text-gray-500">{unit}</p>
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
