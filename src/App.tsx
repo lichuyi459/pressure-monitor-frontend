@@ -146,7 +146,7 @@ function App() {
                     </div>
                     <div className="mt-3">
                       <p className="text-2xl font-bold text-gray-900">
-                        {latestData.sensor2 > 0 ? '-' : ''}{Math.abs(latestData.sensor2).toFixed(0)}
+                        {latestData.sensor2.toFixed(0)}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">Pa</p>
                     </div>
@@ -160,7 +160,7 @@ function App() {
                     </div>
                     <div className="mt-3">
                       <p className="text-2xl font-bold text-gray-900">
-                        {statistics.sensor2.avg > 0 ? '-' : ''}{Math.abs(statistics.sensor2.avg).toFixed(0)}
+                        {statistics.sensor2.avg.toFixed(0)}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">Pa</p>
                     </div>

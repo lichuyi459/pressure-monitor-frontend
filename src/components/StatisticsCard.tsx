@@ -18,24 +18,13 @@ export function StatisticsCard({
   currentValue,
   unit = 'Pa',
 }: StatisticsCardProps) {
-  // 判断是否为负压传感器 (通过标题判断)
-  const isNegativePressure = title.includes('真空');
-  
-  // 确保负压传感器的值显示为负数
-  const formatValue = (value: number) => {
-    if (isNegativePressure && value > 0) {
-      return -value;
-    }
-    return value;
-  };
-  
-  const displayCurrent = currentValue !== undefined ? formatValue(currentValue) : undefined;
-  const displayAvg = formatValue(stats.avg);
-  
   // 计算变化趋势
-  const trend = displayCurrent !== undefined 
-    ? ((displayCurrent - displayAvg) / Math.abs(displayAvg) * 100)
+  const trend = currentValue !== undefined 
+    ? ((currentValue - stats.avg) / Math.abs(stats.avg) * 100)
     : 0;
+  
+  // 判断是否为负压传感器
+  const isNegativePressure = title.includes('真空');
 
   return (
     <Card className="border-gray-200 shadow-sm">
@@ -93,7 +82,9 @@ export function StatisticsCard({
           <div className="space-y-2">
             <div className="flex items-center gap-1.5">
               <div className="h-2 w-2 rounded-full bg-green-500"></div>
-              <span className="text-xs font-medium text-gray-600">最大值</span>
+              <span className="text-xs font-medium text-gray-600">
+                {isNegativePressure ? '最接近0' : '最大值'}
+              </span>
             </div>
             <div>
               <p className="text-xl font-bold text-gray-900">
@@ -121,7 +112,9 @@ export function StatisticsCard({
           <div className="space-y-2">
             <div className="flex items-center gap-1.5">
               <div className="h-2 w-2 rounded-full bg-red-500"></div>
-              <span className="text-xs font-medium text-gray-600">最小值</span>
+              <span className="text-xs font-medium text-gray-600">
+                {isNegativePressure ? '最低值' : '最小值'}
+              </span>
             </div>
             <div>
               <p className="text-xl font-bold text-gray-900">
