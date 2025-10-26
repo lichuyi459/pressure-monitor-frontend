@@ -18,9 +18,23 @@ export function StatisticsCard({
   currentValue,
   unit = 'Pa',
 }: StatisticsCardProps) {
+  // 判断是否为负压传感器 (通过标题判断)
+  const isNegativePressure = title.includes('真空');
+  
+  // 确保负压传感器的值显示为负数
+  const formatValue = (value: number) => {
+    if (isNegativePressure && value > 0) {
+      return -value;
+    }
+    return value;
+  };
+  
+  const displayCurrent = currentValue !== undefined ? formatValue(currentValue) : undefined;
+  const displayAvg = formatValue(stats.avg);
+  
   // 计算变化趋势
-  const trend = currentValue !== undefined 
-    ? ((currentValue - stats.avg) / Math.abs(stats.avg) * 100)
+  const trend = displayCurrent !== undefined 
+    ? ((displayCurrent - displayAvg) / Math.abs(displayAvg) * 100)
     : 0;
 
   return (

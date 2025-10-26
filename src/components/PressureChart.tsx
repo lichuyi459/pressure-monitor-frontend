@@ -19,6 +19,7 @@ interface PressureChartProps {
   color: string;
   unit?: string;
   yAxisDomain?: [number, number] | ['auto', 'auto'];
+  reversed?: boolean; // 是否倒置Y轴
 }
 
 export function PressureChart({
